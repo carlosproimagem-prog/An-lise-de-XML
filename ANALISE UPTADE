@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Triagem TISS — Análise de Glosa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#13242b;
+  --petrol:#1f4a52;
+  --petrol-deep:#0f2e34;
+  --paper:#f6f3ec;
+  --paper-card:#fffdf8;
+  --line:#d8d2c2;
+  --terracotta:#c1532e;
+  --terracotta-deep:#8f3a1f;
+  --olive:#5c6b3f;
+  --amber:#b8862b;
+  --muted:#6b7470;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Inter',sans-serif;
+  font-size:15px;
+  line-height:1.5;
+  min-height:100vh;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 28px 80px;}
+
+/* ---------- Header / masthead ---------- */
+.masthead{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  border-bottom:2px solid var(--ink);
+  padding-bottom:18px;
+  margin-bottom:6px;
+  gap:24px;
+}
+.masthead .eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--terracotta-deep);
+  margin:0 0 6px;
+}
+.masthead h1{
+  font-family:'Source Serif 4',serif;
+  font-weight:700;
+  font-size:38px;
+  margin:0;
+  letter-spacing:-0.01em;
+  color:var(--petrol-deep);
+}
+.masthead .sub{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  color:var(--muted);
+  text-align:right;
+  line-height:1.6;
+}
+.masthead .sub b{color:var(--ink);}
+
+/* ---------- Tabs ---------- */
+.tabs{
+  display:flex;
+  gap:2px;
+  margin:28px 0 24px;
+  border-bottom:1px solid var(--line);
+}
+.tab{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12.5px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  padding:11px 18px;
+  background:transparent;
+  border:none;
+  cursor:pointer;
+  color:var(--muted);
+  border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+  transition:color .15s;
+}
+.tab:hover{color:var(--ink);}
+.tab.active{color:var(--petrol-deep);border-bottom-color:var(--terracotta);font-weight:600;}
+.panel{display:none;}
+.panel.active{display:block;animation:fade .25s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+/* ---------- Cards ---------- */
+.card{
+  background:var(--paper-card);
+  border:1px solid var(--line);
+  border-radius:3px;
+  padding:24px 26px;
+  margin-bottom:20px;
+}
+.card h2{
+  font-family:'Source Serif 4',serif;
+  font-size:19px;
+  margin:0 0 4px;
+  color:var(--petrol-deep);
+}
+.card .desc{color:var(--muted);font-size:13.5px;margin:0 0 18px;}
+
+/* ---------- Dropzone ---------- */
+.dropzone{
+  border:2px dashed var(--line);
+  border-radius:3px;
+  padding:46px 24px;
+  text-align:center;
+  cursor:pointer;
+  transition:border-color .15s, background .15s;
+  background:repeating-linear-gradient(135deg, rgba(31,74,82,.02) 0 2px, transparent 2px 14px);
+}
+.dropzone:hover, .dropzone.drag{border-color:var(--petrol);background:rgba(31,74,82,.04);}
+.dropzone .icon{font-size:30px;margin-bottom:10px;display:block;}
+.dropzone .main-txt{font-weight:600;color:var(--ink);font-size:15px;}
+.dropzone .sub-txt{color:var(--muted);font-size:12.5px;margin-top:4px;}
+input[type=file]{display:none;}
+
+.filebar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--petrol-deep);color:var(--paper-card);
+  padding:10px 16px;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+  margin-bottom:16px;
+}
+.filebar button{
+  background:transparent;border:1px solid rgba(255,255,255,.35);color:#fff;
+  border-radius:2px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;
+}
+.filebar button:hover{background:rgba(255,255,255,.12);}
+
+/* ---------- Buttons ---------- */
+.btn{
+  font-family:'Inter',sans-serif;
+  font-weight:600;
+  font-size:13.5px;
+  padding:10px 20px;
+  border-radius:3px;
+  border:none;
+  cursor:pointer;
+  transition:transform .1s, box-shadow .15s;
+}
+.btn:active{transform:translateY(1px);}
+.btn-primary{background:var(--terracotta);color:#fff;}
+.btn-primary:hover{background:var(--terracotta-deep);}
+.btn-primary:disabled{background:#cabfae;cursor:not-allowed;}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink);}
+.btn-ghost:hover{border-color:var(--petrol);color:var(--petrol-deep);}
+.btn-sm{padding:6px 12px;font-size:12px;}
+.btn-danger{background:transparent;color:var(--terracotta-deep);border:1px solid transparent;}
+.btn-danger:hover{text-decoration:underline;}
+
+/* ---------- Guide summary ---------- */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.field-group{margin-bottom:14px;}
+.field-group .label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.field-group .val{font-size:14.5px;font-weight:500;}
+.field-group .val.mono{font-family:'IBM Plex Mono',monospace;font-size:13.5px;}
+.field-group .val.empty{color:#b3a78f;font-style:italic;font-weight:400;}
+
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{
+  text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--muted);
+  border-bottom:1px solid var(--line);padding:8px 10px;font-weight:500;
+}
+td{padding:9px 10px;border-bottom:1px solid #eee8d9;font-family:'IBM Plex Mono',monospace;}
+tr:last-child td{border-bottom:none;}
+td.num{text-align:right;}
+tr.flagged{background:rgba(193,83,46,.07);}
+tr.flagged td:first-child{border-left:3px solid var(--terracotta);}
+
+/* ---------- Result banner ---------- */
+.result-banner{
+  display:flex;align-items:center;gap:16px;
+  padding:20px 24px;border-radius:3px;margin-bottom:22px;
+}
+.result-banner.ok{background:#eef2e6;border:1px solid var(--olive);}
+.result-banner.warn{background:#fbeee4;border:1px solid var(--terracotta);}
+.result-banner .badge{
+  font-family:'Source Serif 4',serif;font-weight:700;font-size:30px;
+  width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.result-banner.ok .badge{background:var(--olive);color:#fff;}
+.result-banner.warn .badge{background:var(--terracotta);color:#fff;}
+.result-banner .txt b{display:block;font-family:'Source Serif 4',serif;font-size:18px;margin-bottom:2px;}
+.result-banner.ok .txt b{color:#3c4729;}
+.result-banner.warn .txt b{color:var(--terracotta-deep);}
+.result-banner .txt span{font-size:13px;color:var(--muted);}
+
+.finding{
+  border:1px solid var(--line);border-left:4px solid var(--terracotta);
+  border-radius:3px;padding:14px 18px;margin-bottom:10px;background:var(--paper-card);
+}
+.finding.severity-info{border-left-color:var(--amber);}
+.finding .f-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:5px;}
+.finding .f-rule{font-weight:600;font-size:14px;color:var(--ink);}
+.finding .f-sev{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+  padding:2px 7px;border-radius:2px;background:var(--terracotta);color:#fff;flex-shrink:0;
+}
+.finding.severity-info .f-sev{background:var(--amber);}
+.finding .f-detail{font-size:13px;color:var(--ink);margin-bottom:6px;}
+.finding .f-ref{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);background:#f1ede2;padding:4px 8px;border-radius:2px;display:inline-block;}
+
+/* ---------- Rules table ---------- */
+.rule-row{
+  border:1px solid var(--line);border-radius:3px;padding:16px 18px;margin-bottom:10px;
+  display:flex;gap:16px;align-items:flex-start;background:var(--paper-card);
+}
+.rule-row.disabled{opacity:.5;}
+.rule-toggle{
+  position:relative;width:38px;height:21px;flex-shrink:0;margin-top:2px;
+}
+.rule-toggle input{position:absolute;opacity:0;width:100%;height:100%;cursor:pointer;margin:0;}
+.rule-toggle .track{
+  position:absolute;inset:0;background:#cabfae;border-radius:11px;transition:background .15s;
+}
+.rule-toggle input:checked + .track{background:var(--olive);}
+.rule-toggle .knob{
+  position:absolute;top:2px;left:2px;width:17px;height:17px;background:#fff;border-radius:50%;
+  transition:left .15s;box-shadow:0 1px 2px rgba(0,0,0,.3);
+}
+.rule-toggle input:checked + .track .knob{left:19px;}
+.rule-body{flex:1;}
+.rule-name{font-weight:600;font-size:14.5px;margin-bottom:3px;}
+.rule-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:6px;}
+.rule-condition{font-size:13px;color:var(--ink);background:#f1ede2;padding:8px 10px;border-radius:2px;font-family:'IBM Plex Mono',monospace;}
+.rule-actions{display:flex;gap:6px;flex-shrink:0;}
+
+.badge-pill{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.05em;text-transform:uppercase;
+  padding:2px 8px;border-radius:10px;display:inline-block;
+}
+.badge-pill.custom{background:#e3e9da;color:#475332;}
+.badge-pill.builtin{background:#e3edee;color:#2a4d52;}
+
+/* ---------- Form ---------- */
+label.f-label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px;color:var(--ink);}
+input[type=text], input[type=number], select, textarea{
+  width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:3px;
+  font-family:'Inter',sans-serif;font-size:13.5px;background:#fff;color:var(--ink);
+}
+textarea{font-family:'IBM Plex Mono',monospace;resize:vertical;min-height:64px;}
+input:focus, select:focus, textarea:focus{outline:2px solid var(--petrol);outline-offset:1px;}
+.form-row{margin-bottom:14px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.hint{font-size:11.5px;color:var(--muted);margin-top:4px;}
+
+.empty-state{
+  text-align:center;padding:50px 20px;color:var(--muted);
+}
+.empty-state .icon{font-size:34px;margin-bottom:10px;display:block;}
+.empty-state b{color:var(--ink);display:block;margin-bottom:4px;font-size:15px;}
+
+footer.note{
+  margin-top:30px;font-size:12px;color:var(--muted);text-align:center;
+  font-family:'IBM Plex Mono',monospace;
+}
+
+@media (max-width:680px){
+  .masthead{flex-direction:column;align-items:flex-start;}
+  .masthead .sub{text-align:left;}
+  .grid-2, .form-grid{grid-template-columns:1fr;}
+  .masthead h1{font-size:28px;}
+  table{font-size:11.5px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div>
+      <p class="eyebrow">Conferência de faturamento &middot; padrão ANS/TISS</p>
+      <h1>Triagem de Glosa</h1>
+    </div>
+    <div class="sub">Análise local no navegador<br><b>Nenhum dado é enviado a servidores</b></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="analise">Analisar guia</button>
+    <button class="tab" data-tab="regras">Regras de glosa</button>
+    <button class="tab" data-tab="tabela">Tabela de procedimentos</button>
+  </div>
+
+  <!-- ============ PAINEL: ANÁLISE ============ -->
+  <div class="panel active" id="panel-analise">
+
+    <div class="card" id="upload-card">
+      <h2>Guia SP/SADT (XML)</h2>
+      <p class="desc">Envie o arquivo XML de uma guia TISS para conferência automática contra as regras cadastradas.</p>
+      <div class="dropzone" id="dropzone">
+        <span class="icon">&#128196;</span>
+        <div class="main-txt">Arraste o arquivo .xml aqui ou clique para selecionar</div>
+        <div class="sub-txt">Guia de Serviço Profissional / SADT &middot; padrão TISS</div>
+      </div>
+      <input type="file" id="file-input" accept=".xml,text/xml,application/xml">
+    </div>
+
+    <div id="analysis-output"></div>
+
+  </div>
+
+  <!-- ============ PAINEL: REGRAS ============ -->
+  <div class="panel" id="panel-regras">
+    <div class="card">
+      <h2>Regras cadastradas</h2>
+      <p class="desc">Ative, desative ou edite as condições usadas para sinalizar possíveis glosas. Regras desativadas não entram na análise.</p>
+      <div style="margin-bottom:16px;">
+        <button class="btn btn-primary btn-sm" id="btn-new-rule">+ Nova regra</button>
+        <button class="btn btn-ghost btn-sm" id="btn-restore-defaults">Restaurar regras padrão</button>
+      </div>
+      <div id="rules-list"></div>
+    </div>
+  </div>
+
+  <!-- ============ PAINEL: TABELA DE PROCEDIMENTOS ============ -->
+  <div class="panel" id="panel-tabela">
+    <div class="card">
+      <h2>Tabela de referência (TUSS / CBHPM / convênio)</h2>
+      <p class="desc">Importe um CSV com os códigos de procedimento e valores de referência da operadora. Quando carregada, a análise passa a checar se o código cobrado existe na tabela e se o valor cobrado é compatível.</p>
+      <div class="form-row">
+        <label class="f-label">Arquivo CSV — colunas: <code>codigo,descricao,valor</code></label>
+        <input type="file" id="csv-input" accept=".csv,text/csv">
+        <p class="hint">Separador: vírgula ou ponto-e-vírgula. Primeira linha pode ser cabeçalho.</p>
+      </div>
+      <div id="csv-status"></div>
+    </div>
+    <div class="card" id="csv-preview-card" style="display:none;">
+      <h2>Itens importados</h2>
+      <div id="csv-preview"></div>
+    </div>
+  </div>
+
+  <footer class="note">Os achados são indicativos e não substituem a auditoria de faturamento de um profissional habilitado.</footer>
+</div>
+
+<!-- ============ MODAL: EDITAR/CRIAR REGRA ============ -->
+<div id="rule-modal" style="display:none;position:fixed;inset:0;background:rgba(15,46,52,.45);z-index:50;align-items:center;justify-content:center;">
+  <div class="card" style="max-width:560px;width:92%;max-height:88vh;overflow:auto;">
+    <h2 id="modal-title">Nova regra</h2>
+    <p class="desc">Defina uma condição simples. Campos disponíveis aparecem abaixo do editor.</p>
+    <form id="rule-form">
+      <div class="form-row">
+        <label class="f-label">Nome da regra</label>
+        <input type="text" id="f-name" required placeholder="Ex.: Carteira vencida na data do procedimento">
+      </div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label class="f-label">Severidade</label>
+          <select id="f-severity">
+            <option value="glosa">Possível glosa</option>
+            <option value="info">Apenas alerta</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="f-label">Tipo de checagem</label>
+          <select id="f-type">
+            <option value="campo_obrigatorio">Campo obrigatório preenchido</option>
+            <option value="comparacao_datas">Comparação entre duas datas</option>
+            <option value="soma_valores">Soma de procedimentos = valor total</option>
+            <option value="duplicidade">Procedimento duplicado</option>
+            <option value="valor_quantidade">Valor/quantidade válidos (&gt;0)</option>
+            <option value="codigo_formato">Formato do código de procedimento</option>
+            <option value="tabela_existe">Procedimento existe na tabela importada</option>
+            <option value="tabela_valor">Valor cobrado = valor da tabela importada</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row" id="f-params-wrap"></div>
+      <div class="form-row">
+        <label class="f-label">Mensagem exibida quando a regra disparar</label>
+        <textarea id="f-message" required placeholder="Ex.: A carteira do beneficiário está vencida na data de execução do procedimento."></textarea>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px;">
+        <button type="button" class="btn btn-ghost" id="btn-cancel-rule">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar regra</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   PERSISTÊNCIA
+   ========================================================================= */
+const STORAGE_RULES = 'tiss_glosa_rules_v1';
+const STORAGE_TABLE = 'tiss_glosa_table_v1';
+
+/* =========================================================================
+   REGRAS PADRÃO
+   Cada regra: {id, name, type, severity, message, params, builtin, enabled}
+   ========================================================================= */
+function defaultRules(){
+  return [
+    {
+      id:'r_ans_obrig', builtin:true, enabled:true, severity:'glosa',
+      name:'Registro ANS ausente',
+      type:'campo_obrigatorio', params:{campo:'registroANS', rotulo:'Registro ANS'},
+      message:'O campo Registro ANS da operadora não foi preenchido na guia.'
+    },
+    {
+      id:'r_guia_obrig', builtin:true, enabled:true, severity:'glosa',
+      name:'Número da guia ausente',
+      type:'campo_obrigatorio', params:{campo:'numeroGuiaPrestador', rotulo:'Número da guia no prestador'},
+      message:'A guia não informa o número atribuído pelo prestador.'
+    },
+    {
+      id:'r_carteira_obrig', builtin:true, enabled:true, severity:'glosa',
+      name:'Número da carteira do beneficiário ausente',
+      type:'campo_obrigatorio', params:{campo:'numeroCarteira', rotulo:'Número da carteira'},
+      message:'O número da carteira do beneficiário não foi informado.'
+    },
+    {
+      id:'r_data_exec_pos_emissao', builtin:true, enabled:true, severity:'glosa',
+      name:'Procedimento executado após a emissão da guia',
+      type:'comparacao_datas',
+      params:{dataA:'dataExecucao', dataB:'dataEmissao', operador:'maior'},
+      message:'A data de execução do procedimento é posterior à data de emissão da guia.'
+    },
+    {
+      id:'r_carteira_vencida', builtin:true, enabled:true, severity:'glosa',
+      name:'Carteira vencida na data do procedimento',
+      type:'comparacao_datas',
+      params:{dataA:'dataExecucao', dataB:'validadeCarteira', operador:'maior'},
+      message:'A data de execução do procedimento é posterior à validade da carteira do beneficiário.'
+    },
+    {
+      id:'r_soma_valores', builtin:true, enabled:true, severity:'glosa',
+      name:'Soma dos procedimentos ≠ valor total da guia',
+      type:'soma_valores', params:{tolerancia:0.02},
+      message:'A soma dos valores dos procedimentos não corresponde ao valor total declarado na guia.'
+    },
+    {
+      id:'r_duplicidade', builtin:true, enabled:true, severity:'glosa',
+      name:'Procedimento duplicado',
+      type:'duplicidade', params:{},
+      message:'Há mais de um procedimento com o mesmo código na mesma data de execução.'
+    },
+    {
+      id:'r_valor_zerado', builtin:true, enabled:true, severity:'glosa',
+      name:'Valor ou quantidade zerada/negativa',
+      type:'valor_quantidade', params:{},
+      message:'O procedimento tem quantidade ou valor unitário zerado ou negativo.'
+    },
+    {
+      id:'r_codigo_formato', builtin:true, enabled:true, severity:'info',
+      name:'Código de procedimento fora do formato esperado',
+      type:'codigo_formato', params:{tamanhoMin:8, tamanhoMax:10},
+      message:'O código do procedimento não segue o formato numérico esperado da tabela TUSS.'
+    },
+    {
+      id:'r_tabela_existe', builtin:true, enabled:true, severity:'glosa',
+      name:'Procedimento não encontrado na tabela de referência',
+      type:'tabela_existe', params:{},
+      message:'O código do procedimento cobrado não foi encontrado na tabela de referência importada.'
+    },
+    {
+      id:'r_tabela_valor', builtin:true, enabled:true, severity:'glosa',
+      name:'Valor cobrado diverge da tabela de referência',
+      type:'tabela_valor', params:{tolerancia:0.02},
+      message:'O valor unitário cobrado é diferente do valor cadastrado na tabela de referência para este código.'
+    }
+  ];
+}
+
+function loadRules(){
+  try{
+    const raw = localStorage.getItem(STORAGE_RULES);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  const d = defaultRules();
+  saveRules(d);
+  return d;
+}
+function saveRules(rules){ localStorage.setItem(STORAGE_RULES, JSON.stringify(rules)); }
+
+function loadTable(){
+  try{
+    const raw = localStorage.getItem(STORAGE_TABLE);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return null; // {items: [{codigo,descricao,valor}], fileName}
+}
+function saveTable(data){ localStorage.setItem(STORAGE_TABLE, JSON.stringify(data)); }
+
+let RULES = loadRules();
+let REF_TABLE = loadTable();
+
+/* =========================================================================
+   TABS
+   ========================================================================= */
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab==='regras') renderRules();
+    if(btn.dataset.tab==='tabela') renderTablePreview();
+  });
+});
+
+/* =========================================================================
+   PARSER XML TISS — Guia SP/SADT
+   Tenta ser tolerante a variações de namespace/nome de tag entre versões.
+   ========================================================================= */
+function textOf(node, tagNames){
+  if(!node) return '';
+  for(const tag of tagNames){
+    const el = node.getElementsByTagName(tag)[0];
+    if(el && el.textContent.trim()!=='') return el.textContent.trim();
+  }
+  return '';
+}
+function firstEl(node, tagNames){
+  if(!node) return null;
+  for(const tag of tagNames){
+    const el = node.getElementsByTagName(tag)[0];
+    if(el) return el;
+  }
+  return null;
+}
+function allEls(node, tagNames){
+  if(!node) return [];
+  for(const tag of tagNames){
+    const els = node.getElementsByTagName(tag);
+    if(els.length) return Array.from(els);
+  }
+  return [];
+}
+function parseDateBR(str){
+  // aceita DDMMAAAA ou AAAA-MM-DD
+  if(!str) return null;
+  str = str.trim();
+  if(/^\d{8}$/.test(str)){
+    const d = str.slice(0,2), m = str.slice(2,4), y = str.slice(4,8);
+    return new Date(`${y}-${m}-${d}T00:00:00`);
+  }
+  if(/^\d{4}-\d{2}-\d{2}/.test(str)){
+    return new Date(str.slice(0,10)+'T00:00:00');
+  }
+  return null;
+}
+function fmtDate(d){
+  if(!d) return '';
+  return d.toLocaleDateString('pt-BR');
+}
+function parseNumber(str){
+  if(str===undefined || str===null || str==='') return null;
+  str = String(str).trim();
+  if(str==='') return null;
+  const hasComma = str.includes(',');
+  const hasDot = str.includes('.');
+  let normalized;
+  if(hasComma && hasDot){
+    // o último símbolo encontrado é o separador decimal; o outro é separador de milhar
+    const lastComma = str.lastIndexOf(',');
+    const lastDot = str.lastIndexOf('.');
+    if(lastComma > lastDot){
+      normalized = str.replace(/\./g,'').replace(',', '.');
+    } else {
+      normalized = str.replace(/,/g,'');
+    }
+  } else if(hasComma){
+    // só vírgula -> formato BR, vírgula é decimal
+    normalized = str.replace(/\./g,'').replace(',', '.');
+  } else {
+    // só ponto ou nenhum símbolo -> já está em formato padrão (ponto decimal ou inteiro)
+    normalized = str;
+  }
+  const n = parseFloat(normalized);
+  return isNaN(n) ? null : n;
+}
+
+function parseGuiaXML(xmlDoc){
+  const guia = firstEl(xmlDoc, ['guiaSP-SADT','ans:guiaSP-SADT','guiaSPSADT']) || xmlDoc.documentElement;
+
+  const cabecalho = firstEl(guia, ['cabecalhoGuia','ans:cabecalhoGuia']) || guia;
+  const dadosBenef = firstEl(guia, ['dadosBeneficiario','ans:dadosBeneficiario']);
+  const dadosSolic = firstEl(guia, ['dadosSolicitante','ans:dadosSolicitante']);
+  const contratEx = firstEl(guia, ['dadosExecutante','contratadoExecutante','ans:contratadoExecutante']);
+  const dadosAtend = firstEl(guia, ['dadosAtendimento','ans:dadosAtendimento']);
+
+  const header = {
+    registroANS: textOf(cabecalho, ['registroANS','ans:registroANS']),
+    numeroGuiaPrestador: textOf(cabecalho, ['numeroGuiaPrestador','ans:numeroGuiaPrestador']),
+    numeroGuiaOperadora: textOf(guia, ['numeroGuiaOperadora','ans:numeroGuiaOperadora']),
+    dataEmissaoRaw: textOf(cabecalho, ['dataEmissaoGuia','ans:dataEmissaoGuia','dataAutorizacao']),
+  };
+  header.dataEmissao = parseDateBR(header.dataEmissaoRaw);
+
+  const beneficiario = {
+    numeroCarteira: textOf(dadosBenef, ['numeroCarteira','ans:numeroCarteira']),
+    nome: textOf(dadosBenef, ['nomeBeneficiario','ans:nomeBeneficiario']),
+    validadeCarteiraRaw: textOf(dadosBenef, ['validadeCarteira','ans:validadeCarteira']),
+  };
+  beneficiario.validadeCarteira = parseDateBR(beneficiario.validadeCarteiraRaw);
+
+  const prestador = {
+    codigoPrestador: textOf(contratEx, ['codigoPrestadorNaOperadora','ans:codigoPrestadorNaOperadora']),
+    nomePrestador: textOf(contratEx, ['nomeContratadoExecutante','ans:nomeContratadoExecutante','nomeExecutante']),
+    cnes: textOf(dadosAtend, ['codigoCNES','ans:codigoCNES']),
+  };
+
+  const procNodes = allEls(guia, ['procedimentosExecutados','ans:procedimentosExecutados']);
+  const procedimentos = procNodes.map((p, idx)=>{
+    const procEl = firstEl(p, ['procedimento','ans:procedimento']) || p;
+    const codigo = textOf(procEl, ['codigoProcedimento','ans:codigoProcedimento']);
+    const descricao = textOf(procEl, ['descricaoProcedimento','ans:descricaoProcedimento']);
+    const dataExecRaw = textOf(p, ['dataExecucao','ans:dataExecucao']);
+    const qtdRaw = textOf(p, ['quantidadeExecutada','ans:quantidadeExecutada']);
+    const valorUnitRaw = textOf(p, ['valorUnitario','ans:valorUnitario']);
+    const valorTotalRaw = textOf(p, ['valorTotal','ans:valorTotal']);
+    return {
+      idx,
+      codigo, descricao,
+      dataExecucaoRaw: dataExecRaw, dataExecucao: parseDateBR(dataExecRaw),
+      quantidade: parseNumber(qtdRaw),
+      valorUnitario: parseNumber(valorUnitRaw),
+      valorTotal: parseNumber(valorTotalRaw),
+    };
+  });
+
+  const valorTotalGuiaRaw = textOf(guia, ['valorTotalGeral','ans:valorTotalGeral','valorTotal']);
+  const valorTotalGuia = parseNumber(valorTotalGuiaRaw);
+
+  return {
+    header, beneficiario, prestador, procedimentos,
+    valorTotalGuia, valorTotalGuiaRaw,
+    raw: guia
+  };
+}
+
+/* =========================================================================
+   MOTOR DE REGRAS
+   ========================================================================= */
+function fieldValue(ctx, campo){
+  switch(campo){
+    case 'registroANS': return ctx.header.registroANS;
+    case 'numeroGuiaPrestador': return ctx.header.numeroGuiaPrestador;
+    case 'numeroCarteira': return ctx.beneficiario.numeroCarteira;
+    case 'nomeBeneficiario': return ctx.beneficiario.nome;
+    case 'cnes': return ctx.prestador.cnes;
+    case 'codigoPrestador': return ctx.prestador.codigoPrestador;
+    default: return '';
+  }
+}
+function dateValue(ctx, key, proc){
+  switch(key){
+    case 'dataEmissao': return ctx.header.dataEmissao;
+    case 'validadeCarteira': return ctx.beneficiario.validadeCarteira;
+    case 'dataExecucao': return proc ? proc.dataExecucao : null;
+    default: return null;
+  }
+}
+
+function runRule(rule, ctx){
+  const findings = [];
+  const push = (detail, ref)=>findings.push({rule, detail, ref});
+
+  switch(rule.type){
+    case 'campo_obrigatorio': {
+      const v = fieldValue(ctx, rule.params.campo);
+      if(!v) push(rule.message, `${rule.params.rotulo || rule.params.campo}: (vazio)`);
+      break;
+    }
+    case 'comparacao_datas': {
+      // aplicado por procedimento se dataA/dataB envolver dataExecucao
+      const involvesProc = rule.params.dataA==='dataExecucao' || rule.params.dataB==='dataExecucao';
+      if(involvesProc){
+        ctx.procedimentos.forEach(p=>{
+          const a = dateValue(ctx, rule.params.dataA, p);
+          const b = dateValue(ctx, rule.params.dataB, p);
+          if(a && b){
+            const cond = rule.params.operador==='maior' ? a > b : a < b;
+            if(cond) push(rule.message, `Procedimento ${p.codigo||'(s/código)'} — ${rule.params.dataA}: ${fmtDate(a)} / ${rule.params.dataB}: ${fmtDate(b)}`);
+          }
+        });
+      } else {
+        const a = dateValue(ctx, rule.params.dataA);
+        const b = dateValue(ctx, rule.params.dataB);
+        if(a && b){
+          const cond = rule.params.operador==='maior' ? a > b : a < b;
+          if(cond) push(rule.message, `${rule.params.dataA}: ${fmtDate(a)} / ${rule.params.dataB}: ${fmtDate(b)}`);
+        }
+      }
+      break;
+    }
+    case 'soma_valores': {
+      if(ctx.valorTotalGuia!=null && ctx.procedimentos.length){
+        const soma = ctx.procedimentos.reduce((s,p)=> s + (p.valorTotal ?? ((p.quantidade||0)*(p.valorUnitario||0))), 0);
+        const diff = Math.abs(soma - ctx.valorTotalGuia);
+        if(diff > (rule.params.tolerancia ?? 0.02)){
+          push(rule.message, `Soma calculada: R$ ${soma.toFixed(2)} / Valor da guia: R$ ${ctx.valorTotalGuia.toFixed(2)}`);
+        }
+      }
+      break;
+    }
+    case 'duplicidade': {
+      const seen = {};
+      ctx.procedimentos.forEach(p=>{
+        const key = `${p.codigo}|${p.dataExecucaoRaw}`;
+        seen[key] = (seen[key]||0)+1;
+      });
+      Object.entries(seen).forEach(([key,count])=>{
+        if(count>1){
+          const [codigo,data] = key.split('|');
+          push(rule.message, `Código ${codigo||'(s/código)'} repetido ${count}x na data ${data||'(s/data)'}`);
+        }
+      });
+      break;
+    }
+    case 'valor_quantidade': {
+      ctx.procedimentos.forEach(p=>{
+        const qtdInvalida = p.quantidade!=null && p.quantidade<=0;
+        const valInvalido = p.valorUnitario!=null && p.valorUnitario<0;
+        if(qtdInvalida || valInvalido){
+          push(rule.message, `Procedimento ${p.codigo||'(s/código)'} — qtd: ${p.quantidade} / valor unitário: ${p.valorUnitario}`);
+        }
+      });
+      break;
+    }
+    case 'codigo_formato': {
+      ctx.procedimentos.forEach(p=>{
+        const c = (p.codigo||'').trim();
+        const isNum = /^\d+$/.test(c);
+        const len = c.length;
+        if(!c || !isNum || len < rule.params.tamanhoMin || len > rule.params.tamanhoMax){
+          push(rule.message, `Código informado: "${p.codigo||'(vazio)'}"`);
+        }
+      });
+      break;
+    }
+    case 'tabela_existe': {
+      if(REF_TABLE && REF_TABLE.items && REF_TABLE.items.length){
+        const codes = new Set(REF_TABLE.items.map(i=>String(i.codigo).trim()));
+        ctx.procedimentos.forEach(p=>{
+          if(p.codigo && !codes.has(String(p.codigo).trim())){
+            push(rule.message, `Código ${p.codigo} não consta na tabela "${REF_TABLE.fileName||'importada'}"`);
+          }
+        });
+      }
+      break;
+    }
+    case 'tabela_valor': {
+      if(REF_TABLE && REF_TABLE.items && REF_TABLE.items.length){
+        const map = {};
+        REF_TABLE.items.forEach(i=> map[String(i.codigo).trim()] = i);
+        ctx.procedimentos.forEach(p=>{
+          const ref = map[String(p.codigo).trim()];
+          if(ref && ref.valor!=null && p.valorUnitario!=null){
+            const diff = Math.abs(ref.valor - p.valorUnitario);
+            if(diff > (rule.params.tolerancia ?? 0.02)){
+              push(rule.message, `Código ${p.codigo} — cobrado: R$ ${p.valorUnitario.toFixed(2)} / tabela: R$ ${ref.valor.toFixed(2)}`);
+            }
+          }
+        });
+      }
+      break;
+    }
+  }
+  return findings;
+}
+
+function runAllRules(ctx){
+  let all = [];
+  RULES.filter(r=>r.enabled).forEach(rule=>{
+    all = all.concat(runRule(rule, ctx));
+  });
+  return all;
+}
+
+/* =========================================================================
+   UPLOAD + RENDER ANÁLISE
+   ========================================================================= */
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('file-input');
+let currentFileName = '';
+
+dropzone.addEventListener('click', ()=>fileInput.click());
+dropzone.addEventListener('dragover', e=>{e.preventDefault(); dropzone.classList.add('drag');});
+dropzone.addEventListener('dragleave', ()=>dropzone.classList.remove('drag'));
+dropzone.addEventListener('drop', e=>{
+  e.preventDefault(); dropzone.classList.remove('drag');
+  if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', e=>{
+  if(e.target.files.length) handleFile(e.target.files[0]);
+});
+
+function handleFile(file){
+  currentFileName = file.name;
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    try{
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(e.target.result, 'application/xml');
+      const errorNode = xmlDoc.getElementsByTagName('parsererror')[0];
+      if(errorNode){
+        renderError('O arquivo não pôde ser interpretado como XML válido. Verifique se o arquivo não está corrompido.');
+        return;
+      }
+      const ctx = parseGuiaXML(xmlDoc);
+      if(!ctx.procedimentos.length && !ctx.beneficiario.numeroCarteira && !ctx.header.registroANS){
+        renderError('Não foi possível localizar a estrutura de uma guia SP/SADT neste arquivo. Confira se é o XML correto da guia TISS.');
+        return;
+      }
+      const findings = runAllRules(ctx);
+      renderAnalysis(ctx, findings);
+    }catch(err){
+      renderError('Erro ao processar o arquivo: ' + err.message);
+    }
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function renderError(msg){
+  document.getElementById('analysis-output').innerHTML = `
+    <div class="card">
+      <div class="empty-state">
+        <span class="icon">&#9888;</span>
+        <b>Não foi possível analisar o arquivo</b>
+        <span>${escapeHtml(msg)}</span>
+      </div>
+    </div>`;
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderAnalysis(ctx, findings){
+  const out = document.getElementById('analysis-output');
+  const glosaCount = findings.filter(f=>f.rule.severity==='glosa').length;
+  const infoCount = findings.filter(f=>f.rule.severity==='info').length;
+
+  let html = '';
+
+  html += `<div class="filebar"><span>&#128196; ${escapeHtml(currentFileName)}</span>
+    <button onclick="document.getElementById('file-input').value='';document.getElementById('analysis-output').innerHTML='';">Remover</button></div>`;
+
+  if(glosaCount===0 && infoCount===0){
+    html += `<div class="result-banner ok">
+      <div class="badge">&#10003;</div>
+      <div class="txt"><b>Nenhuma possível glosa identificada</b><span>A guia passou por todas as regras ativas sem disparar alertas.</span></div>
+    </div>`;
+  } else {
+    html += `<div class="result-banner warn">
+      <div class="badge">${glosaCount}</div>
+      <div class="txt"><b>${glosaCount} possível${glosaCount===1?'':'is'} glosa${glosaCount===1?'':'s'} identificada${glosaCount===1?'':'s'}${infoCount? ' &middot; '+infoCount+' alerta'+(infoCount===1?'':'s'):''}</b><span>Revise os itens abaixo antes do envio para a operadora.</span></div>
+    </div>`;
+  }
+
+  if(findings.length){
+    html += `<div class="card"><h2>Achados</h2>`;
+    findings.forEach(f=>{
+      html += `<div class="finding severity-${f.rule.severity}">
+        <div class="f-top">
+          <span class="f-rule">${escapeHtml(f.rule.name)}</span>
+          <span class="f-sev">${f.rule.severity==='glosa'?'Possível glosa':'Alerta'}</span>
+        </div>
+        <div class="f-detail">${escapeHtml(f.detail)}</div>
+        <div class="f-ref">${escapeHtml(f.ref)}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Resumo da guia
+  html += `<div class="card"><h2>Dados extraídos da guia</h2>
+    <div class="grid-2">
+      <div>
+        <div class="field-group"><div class="label">Registro ANS</div><div class="val mono ${ctx.header.registroANS?'':'empty'}">${ctx.header.registroANS||'não informado'}</div></div>
+        <div class="field-group"><div class="label">Número da guia (prestador)</div><div class="val mono ${ctx.header.numeroGuiaPrestador?'':'empty'}">${ctx.header.numeroGuiaPrestador||'não informado'}</div></div>
+        <div class="field-group"><div class="label">Data de emissão</div><div class="val mono ${ctx.header.dataEmissao?'':'empty'}">${ctx.header.dataEmissao?fmtDate(ctx.header.dataEmissao):'não informada'}</div></div>
+      </div>
+      <div>
+        <div class="field-group"><div class="label">Beneficiário</div><div class="val ${ctx.beneficiario.nome?'':'empty'}">${escapeHtml(ctx.beneficiario.nome)||'não informado'}</div></div>
+        <div class="field-group"><div class="label">Número da carteira</div><div class="val mono ${ctx.beneficiario.numeroCarteira?'':'empty'}">${ctx.beneficiario.numeroCarteira||'não informado'}</div></div>
+        <div class="field-group"><div class="label">Validade da carteira</div><div class="val mono ${ctx.beneficiario.validadeCarteira?'':'empty'}">${ctx.beneficiario.validadeCarteira?fmtDate(ctx.beneficiario.validadeCarteira):'não informada'}</div></div>
+      </div>
+    </div>
+  </div>`;
+
+  // Procedimentos
+  const flaggedCodes = new Set();
+  findings.forEach(f=>{
+    const m = f.detail.match(/(?:Código|Procedimento) ([\dA-Za-z\.\-]+)/);
+    if(m) flaggedCodes.add(m[1]);
+  });
+
+  if(ctx.procedimentos.length){
+    html += `<div class="card"><h2>Procedimentos cobrados (${ctx.procedimentos.length})</h2>
+      <table><thead><tr>
+        <th>Código</th><th>Descrição</th><th>Data</th><th>Qtd.</th><th>Vlr. unit.</th><th>Vlr. total</th>
+      </tr></thead><tbody>`;
+    ctx.procedimentos.forEach(p=>{
+      const isFlagged = flaggedCodes.has(p.codigo);
+      html += `<tr class="${isFlagged?'flagged':''}">
+        <td>${escapeHtml(p.codigo)||'—'}</td>
+        <td>${escapeHtml(p.descricao)||'—'}</td>
+        <td>${p.dataExecucao?fmtDate(p.dataExecucao):'—'}</td>
+        <td class="num">${p.quantidade??'—'}</td>
+        <td class="num">${p.valorUnitario!=null?'R$ '+p.valorUnitario.toFixed(2):'—'}</td>
+        <td class="num">${p.valorTotal!=null?'R$ '+p.valorTotal.toFixed(2):'—'}</td>
+      </tr>`;
+    });
+    html += `</tbody></table>
+      <div style="text-align:right;margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:13px;">
+        Valor total da guia: <b>${ctx.valorTotalGuia!=null?'R$ '+ctx.valorTotalGuia.toFixed(2):'não informado'}</b>
+      </div>
+    </div>`;
+  }
+
+  out.innerHTML = html;
+}
+
+/* =========================================================================
+   RENDER REGRAS
+   ========================================================================= */
+function typeLabel(type){
+  return {
+    campo_obrigatorio:'Campo obrigatório',
+    comparacao_datas:'Comparação de datas',
+    soma_valores:'Soma de valores',
+    duplicidade:'Duplicidade',
+    valor_quantidade:'Valor/quantidade',
+    codigo_formato:'Formato de código',
+    tabela_existe:'Existência na tabela',
+    tabela_valor:'Valor x tabela',
+  }[type] || type;
+}
+
+function renderRules(){
+  const list = document.getElementById('rules-list');
+  if(!RULES.length){
+    list.innerHTML = `<div class="empty-state"><span class="icon">&#128203;</span><b>Nenhuma regra cadastrada</b><span>Crie uma nova regra para começar a checar as guias.</span></div>`;
+    return;
+  }
+  list.innerHTML = RULES.map(rule=>`
+    <div class="rule-row ${rule.enabled?'':'disabled'}">
+      <label class="rule-toggle">
+        <input type="checkbox" ${rule.enabled?'checked':''} onchange="toggleRule('${rule.id}', this.checked)">
+        <span class="track"><span class="knob"></span></span>
+      </label>
+      <div class="rule-body">
+        <div class="rule-name">${escapeHtml(rule.name)} <span class="badge-pill ${rule.builtin?'builtin':'custom'}">${rule.builtin?'padrão':'personalizada'}</span></div>
+        <div class="rule-meta">${typeLabel(rule.type)} &middot; severidade: ${rule.severity==='glosa'?'possível glosa':'alerta'}</div>
+        <div class="rule-condition">${escapeHtml(rule.message)}</div>
+      </div>
+      <div class="rule-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openEditRule('${rule.id}')">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteRule('${rule.id}')">Excluir</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleRule(id, enabled){
+  const r = RULES.find(r=>r.id===id);
+  if(r){ r.enabled = enabled; saveRules(RULES); }
+}
+function deleteRule(id){
+  if(!confirm('Excluir esta regra? Essa ação não pode ser desfeita.')) return;
+  RULES = RULES.filter(r=>r.id!==id);
+  saveRules(RULES);
+  renderRules();
+}
+document.getElementById('btn-restore-defaults').addEventListener('click', ()=>{
+  if(!confirm('Isso vai restaurar as 10 regras padrão. Regras personalizadas serão mantidas. Continuar?')) return;
+  const defaults = defaultRules();
+  const customOnes = RULES.filter(r=>!r.builtin);
+  RULES = [...defaults, ...customOnes];
+  saveRules(RULES);
+  renderRules();
+});
+
+/* ---------- Modal: criar/editar regra ---------- */
+const modal = document.getElementById('rule-modal');
+const ruleForm = document.getElementById('rule-form');
+let editingRuleId = null;
+
+const PARAM_FIELDS = {
+  campo_obrigatorio: [
+    {key:'campo', label:'Campo', type:'select', options:[
+      ['registroANS','Registro ANS'],['numeroGuiaPrestador','Número da guia'],
+      ['numeroCarteira','Número da carteira'],['nomeBeneficiario','Nome do beneficiário'],
+      ['cnes','CNES'],['codigoPrestador','Código do prestador']]},
+  ],
+  comparacao_datas: [
+    {key:'dataA', label:'Data A', type:'select', options:[
+      ['dataExecucao','Data de execução do procedimento'],['dataEmissao','Data de emissão da guia'],['validadeCarteira','Validade da carteira']]},
+    {key:'operador', label:'Condição', type:'select', options:[['maior','Data A é posterior à Data B'],['menor','Data A é anterior à Data B']]},
+    {key:'dataB', label:'Data B', type:'select', options:[
+      ['dataEmissao','Data de emissão da guia'],['validadeCarteira','Validade da carteira'],['dataExecucao','Data de execução do procedimento']]},
+  ],
+  soma_valores: [
+    {key:'tolerancia', label:'Tolerância (R$)', type:'number', step:'0.01', default:0.02},
+  ],
+  duplicidade: [],
+  valor_quantidade: [],
+  codigo_formato: [
+    {key:'tamanhoMin', label:'Tamanho mínimo do código', type:'number', default:8},
+    {key:'tamanhoMax', label:'Tamanho máximo do código', type:'number', default:10},
+  ],
+  tabela_existe: [],
+  tabela_valor: [
+    {key:'tolerancia', label:'Tolerância (R$)', type:'number', step:'0.01', default:0.02},
+  ],
+};
+
+function renderParamFields(type, params={}){
+  const fields = PARAM_FIELDS[type] || [];
+  if(!fields.length){
+    return `<p class="hint">Esta checagem não precisa de parâmetros adicionais.</p>`;
+  }
+  return `<div class="form-grid">` + fields.map(f=>{
+    const val = params[f.key] ?? f.default ?? '';
+    if(f.type==='select'){
+      return `<div><label class="f-label">${f.label}</label>
+        <select data-param="${f.key}">
+          ${f.options.map(([v,l])=>`<option value="${v}" ${v===val?'selected':''}>${l}</option>`).join('')}
+        </select></div>`;
+    }
+    return `<div><label class="f-label">${f.label}</label>
+      <input type="number" step="${f.step||'1'}" data-param="${f.key}" value="${val}"></div>`;
+  }).join('') + `</div>`;
+}
+
+document.getElementById('f-type').addEventListener('change', (e)=>{
+  document.getElementById('f-params-wrap').innerHTML = renderParamFields(e.target.value);
+});
+
+function openNewRule(){
+  editingRuleId = null;
+  document.getElementById('modal-title').textContent = 'Nova regra';
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-severity').value = 'glosa';
+  document.getElementById('f-type').value = 'campo_obrigatorio';
+  document.getElementById('f-message').value = '';
+  document.getElementById('f-params-wrap').innerHTML = renderParamFields('campo_obrigatorio');
+  modal.style.display = 'flex';
+}
+function openEditRule(id){
+  const rule = RULES.find(r=>r.id===id);
+  if(!rule) return;
+  editingRuleId = id;
+  document.getElementById('modal-title').textContent = 'Editar regra';
+  document.getElementById('f-name').value = rule.name;
+  document.getElementById('f-severity').value = rule.severity;
+  document.getElementById('f-type').value = rule.type;
+  document.getElementById('f-message').value = rule.message;
+  document.getElementById('f-params-wrap').innerHTML = renderParamFields(rule.type, rule.params);
+  modal.style.display = 'flex';
+}
+document.getElementById('btn-new-rule').addEventListener('click', openNewRule);
+document.getElementById('btn-cancel-rule').addEventListener('click', ()=>modal.style.display='none');
+modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.style.display='none'; });
+
+ruleForm.addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const type = document.getElementById('f-type').value;
+  const params = {};
+  document.querySelectorAll('#f-params-wrap [data-param]').forEach(el=>{
+    const key = el.dataset.param;
+    params[key] = el.tagName==='SELECT' ? el.value : parseFloat(el.value);
+  });
+  // garantir rotulo para campo_obrigatorio
+  if(type==='campo_obrigatorio'){
+    const labels = {registroANS:'Registro ANS', numeroGuiaPrestador:'Número da guia', numeroCarteira:'Número da carteira', nomeBeneficiario:'Nome do beneficiário', cnes:'CNES', codigoPrestador:'Código do prestador'};
+    params.rotulo = labels[params.campo] || params.campo;
+  }
+
+  const data = {
+    name: document.getElementById('f-name').value.trim(),
+    severity: document.getElementById('f-severity').value,
+    type,
+    params,
+    message: document.getElementById('f-message').value.trim(),
+  };
+
+  if(editingRuleId){
+    const r = RULES.find(r=>r.id===editingRuleId);
+    Object.assign(r, data);
+  } else {
+    RULES.push({ id:'r_custom_'+Date.now(), builtin:false, enabled:true, ...data });
+  }
+  saveRules(RULES);
+  modal.style.display = 'none';
+  renderRules();
+});
+
+/* =========================================================================
+   TABELA DE PROCEDIMENTOS (CSV)
+   ========================================================================= */
+document.getElementById('csv-input').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev)=>{
+    try{
+      const items = parseCSV(ev.target.result);
+      REF_TABLE = {items, fileName:file.name, importedAt:new Date().toISOString()};
+      saveTable(REF_TABLE);
+      renderTablePreview();
+      document.getElementById('csv-status').innerHTML = `<p class="hint" style="color:var(--olive);">${items.length} itens importados com sucesso.</p>`;
+    }catch(err){
+      document.getElementById('csv-status').innerHTML = `<p class="hint" style="color:var(--terracotta-deep);">Erro ao importar: ${escapeHtml(err.message)}</p>`;
+    }
+  };
+  reader.readAsText(file, 'UTF-8');
+});
+
+function parseCSV(text){
+  const sep = text.indexOf(';') > -1 && text.indexOf(';') < (text.indexOf(',')+1 || Infinity) ? ';' : ',';
+  const lines = text.split(/\r?\n/).filter(l=>l.trim()!=='');
+  if(!lines.length) throw new Error('Arquivo vazio.');
+  let start = 0;
+  const firstCols = lines[0].split(sep);
+  const looksHeader = /codigo|código|descri|valor/i.test(lines[0]);
+  if(looksHeader) start = 1;
+  const items = [];
+  for(let i=start;i<lines.length;i++){
+    const cols = lines[i].split(sep);
+    if(cols.length<2) continue;
+    const codigo = (cols[0]||'').trim();
+    const descricao = (cols[1]||'').trim();
+    const valorRaw = (cols[2]||'').trim();
+    const valor = valorRaw ? parseNumber(valorRaw) : null;
+    if(codigo) items.push({codigo, descricao, valor});
+  }
+  if(!items.length) throw new Error('Nenhum item válido encontrado. Verifique as colunas codigo,descricao,valor.');
+  return items;
+}
+
+function renderTablePreview(){
+  const card = document.getElementById('csv-preview-card');
+  const wrap = document.getElementById('csv-preview');
+  if(!REF_TABLE || !REF_TABLE.items || !REF_TABLE.items.length){
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'block';
+  wrap.innerHTML = `
+    <div class="filebar"><span>&#128196; ${escapeHtml(REF_TABLE.fileName||'tabela.csv')} &middot; ${REF_TABLE.items.length} itens</span>
+      <button onclick="clearTable()">Remover tabela</button></div>
+    <table><thead><tr><th>Código</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>
+      ${REF_TABLE.items.slice(0,200).map(i=>`<tr><td>${escapeHtml(i.codigo)}</td><td>${escapeHtml(i.descricao)}</td><td class="num">${i.valor!=null?'R$ '+i.valor.toFixed(2):'—'}</td></tr>`).join('')}
+    </tbody></table>
+    ${REF_TABLE.items.length>200?`<p class="hint">Exibindo 200 de ${REF_TABLE.items.length} itens.</p>`:''}
+  `;
+}
+function clearTable(){
+  if(!confirm('Remover a tabela de referência importada?')) return;
+  REF_TABLE = null;
+  localStorage.removeItem(STORAGE_TABLE);
+  document.getElementById('csv-status').innerHTML = '';
+  renderTablePreview();
+}
+
+/* =========================================================================
+   INIT
+   ========================================================================= */
+renderRules();
+renderTablePreview();
+</script>
+</body>
+</html>
