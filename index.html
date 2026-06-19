@@ -9,52 +9,71 @@
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#13242b;
-  --petrol:#1f4a52;
-  --petrol-deep:#0f2e34;
-  --paper:#f6f3ec;
-  --paper-card:#fffdf8;
-  --line:#d8d2c2;
-  --terracotta:#c1532e;
-  --terracotta-deep:#8f3a1f;
-  --olive:#5c6b3f;
-  --amber:#b8862b;
-  --muted:#6b7470;
+  --ink:#102f4d;
+  --petrol:#006da8;
+  --petrol-deep:#003f70;
+  --paper:#f3f7fa;
+  --paper-card:#ffffff;
+  --line:#cbd8e2;
+  --terracotta:#f58220;
+  --terracotta-deep:#d76000;
+  --olive:#168765;
+  --amber:#f0a22e;
+  --muted:#627486;
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
 body{
-  background:var(--paper);
+  background:
+    linear-gradient(180deg, #e8f3fa 0, var(--paper) 270px);
   color:var(--ink);
   font-family:'Inter',sans-serif;
   font-size:15px;
   line-height:1.5;
   min-height:100vh;
 }
-.wrap{max-width:1080px;margin:0 auto;padding:40px 28px 80px;}
+.wrap{max-width:1120px;margin:0 auto;padding:26px 28px 70px;}
 
 /* ---------- Header / masthead ---------- */
 .masthead{
   display:flex;
   justify-content:space-between;
-  align-items:flex-end;
-  border-bottom:2px solid var(--ink);
-  padding-bottom:18px;
-  margin-bottom:6px;
+  align-items:center;
+  background:#fff;
+  border:1px solid rgba(0,63,112,.15);
+  border-top:5px solid var(--petrol);
+  border-radius:12px;
+  padding:22px 26px;
+  margin-bottom:12px;
   gap:24px;
+  box-shadow:0 12px 34px rgba(0,63,112,.10);
+}
+.brand-title{display:flex;align-items:center;gap:20px;}
+.brand-logo{
+  width:108px;height:108px;object-fit:contain;flex:0 0 auto;
+  filter:drop-shadow(0 4px 8px rgba(0,63,112,.17));
+  border-radius:50%;
+  border:4px solid #fff;
+  background:#d8d8d8;
+}
+.brand-logo-fallback{
+  display:none;width:92px;height:92px;border-radius:50%;
+  align-items:center;justify-content:center;background:var(--petrol-deep);color:#fff;
+  font-family:'Source Serif 4',serif;font-weight:700;font-size:16px;line-height:1.05;
+  text-align:center;border:4px solid var(--terracotta);flex:0 0 auto;
 }
 .masthead .eyebrow{
   font-family:'IBM Plex Mono',monospace;
   font-size:11px;
   letter-spacing:.12em;
   text-transform:uppercase;
-  color:var(--terracotta-deep);
+  color:var(--petrol);
   margin:0 0 6px;
 }
 .masthead h1{
   font-family:'Source Serif 4',serif;
   font-weight:700;
-  font-size:38px;
+  font-size:40px;
   margin:0;
   letter-spacing:-0.01em;
   color:var(--petrol-deep);
@@ -65,8 +84,16 @@ body{
   color:var(--muted);
   text-align:right;
   line-height:1.6;
+  max-width:290px;
 }
 .masthead .sub b{color:var(--ink);}
+.author-credit{
+  margin-top:12px;padding:10px 13px;
+  border-left:4px solid var(--terracotta);
+  background:#fff7ef;border-radius:0 7px 7px 0;
+  color:var(--muted);font-size:11.5px;
+}
+.author-credit strong{display:block;color:var(--petrol-deep);font-size:14px;}
 
 /* ---------- Tabs ---------- */
 .tabs{
@@ -74,6 +101,7 @@ body{
   gap:2px;
   margin:28px 0 24px;
   border-bottom:1px solid var(--line);
+  padding:0 8px;
 }
 .tab{
   font-family:'IBM Plex Mono',monospace;
@@ -99,9 +127,10 @@ body{
 .card{
   background:var(--paper-card);
   border:1px solid var(--line);
-  border-radius:3px;
+  border-radius:10px;
   padding:24px 26px;
   margin-bottom:20px;
+  box-shadow:0 5px 18px rgba(0,63,112,.055);
 }
 .card h2{
   font-family:'Source Serif 4',serif;
@@ -114,14 +143,14 @@ body{
 /* ---------- Dropzone ---------- */
 .dropzone{
   border:2px dashed var(--line);
-  border-radius:3px;
+  border-radius:9px;
   padding:46px 24px;
   text-align:center;
   cursor:pointer;
   transition:border-color .15s, background .15s;
-  background:repeating-linear-gradient(135deg, rgba(31,74,82,.02) 0 2px, transparent 2px 14px);
+  background:repeating-linear-gradient(135deg, rgba(0,109,168,.025) 0 2px, transparent 2px 14px);
 }
-.dropzone:hover, .dropzone.drag{border-color:var(--petrol);background:rgba(31,74,82,.04);}
+.dropzone:hover, .dropzone.drag{border-color:var(--petrol);background:rgba(0,109,168,.055);}
 .dropzone .icon{font-size:30px;margin-bottom:10px;display:block;}
 .dropzone .main-txt{font-weight:600;color:var(--ink);font-size:15px;}
 .dropzone .sub-txt{color:var(--muted);font-size:12.5px;margin-top:4px;}
@@ -130,7 +159,7 @@ input[type=file]{display:none;}
 .filebar{
   display:flex;align-items:center;justify-content:space-between;
   background:var(--petrol-deep);color:var(--paper-card);
-  padding:10px 16px;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+  padding:10px 16px;border-radius:8px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;
   margin-bottom:16px;
 }
 .filebar button{
@@ -145,7 +174,7 @@ input[type=file]{display:none;}
   font-weight:600;
   font-size:13.5px;
   padding:10px 20px;
-  border-radius:3px;
+  border-radius:7px;
   border:none;
   cursor:pointer;
   transition:transform .1s, box-shadow .15s;
@@ -183,7 +212,7 @@ tr.flagged td:first-child{border-left:3px solid var(--terracotta);}
 /* ---------- Result banner ---------- */
 .result-banner{
   display:flex;align-items:center;gap:16px;
-  padding:20px 24px;border-radius:3px;margin-bottom:22px;
+  padding:20px 24px;border-radius:10px;margin-bottom:22px;
 }
 .result-banner.ok{background:#eef2e6;border:1px solid var(--olive);}
 .result-banner.warn{background:#fbeee4;border:1px solid var(--terracotta);}
@@ -200,7 +229,7 @@ tr.flagged td:first-child{border-left:3px solid var(--terracotta);}
 
 .finding{
   border:1px solid var(--line);border-left:4px solid var(--terracotta);
-  border-radius:3px;padding:14px 18px;margin-bottom:10px;background:var(--paper-card);
+  border-radius:8px;padding:14px 18px;margin-bottom:10px;background:var(--paper-card);
 }
 .finding.severity-info{border-left-color:var(--amber);}
 .finding .f-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:5px;}
@@ -215,7 +244,7 @@ tr.flagged td:first-child{border-left:3px solid var(--terracotta);}
 
 /* ---------- Rules table ---------- */
 .rule-row{
-  border:1px solid var(--line);border-radius:3px;padding:16px 18px;margin-bottom:10px;
+  border:1px solid var(--line);border-radius:9px;padding:16px 18px;margin-bottom:10px;
   display:flex;gap:16px;align-items:flex-start;background:var(--paper-card);
 }
 .rule-row.disabled{opacity:.5;}
@@ -264,13 +293,22 @@ input:focus, select:focus, textarea:focus{outline:2px solid var(--petrol);outlin
 .empty-state b{color:var(--ink);display:block;margin-bottom:4px;font-size:15px;}
 
 footer.note{
-  margin-top:30px;font-size:12px;color:var(--muted);text-align:center;
+  margin-top:30px;padding-top:20px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--muted);text-align:center;
   font-family:'IBM Plex Mono',monospace;
+}
+.footer-author{
+  display:block;margin-top:10px;color:var(--petrol-deep);
+  font-weight:700;letter-spacing:.02em;
 }
 
 @media (max-width:680px){
   .masthead{flex-direction:column;align-items:flex-start;}
   .masthead .sub{text-align:left;}
+  .brand-title{align-items:flex-start;}
+  .brand-title{width:100%;}
+  .brand-logo,.brand-logo-fallback{width:78px;height:78px;}
+  .masthead{padding:18px;}
   .grid-2, .form-grid{grid-template-columns:1fr;}
   .masthead h1{font-size:28px;}
   table{font-size:11.5px;}
@@ -281,11 +319,23 @@ footer.note{
 <div class="wrap">
 
   <div class="masthead">
-    <div>
-      <p class="eyebrow">Conferência de faturamento &middot; padrão ANS/TISS</p>
-      <h1>Triagem de Glosa</h1>
+    <div class="brand-title">
+      <img class="brand-logo" src="logo-proimagem.png" alt="Logo Pro Imagem"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <div class="brand-logo-fallback" aria-hidden="true">PRO<br>IMAGEM</div>
+      <div>
+        <p class="eyebrow">Pro Imagem &middot; padrão ANS/TISS</p>
+        <h1>Triagem de Glosa</h1>
+      </div>
     </div>
-    <div class="sub">Análise local no navegador<br><b>Nenhum dado é enviado a servidores</b></div>
+    <div class="sub">
+      Análise local no navegador<br>
+      <b>Nenhum dado do XML é enviado a servidores</b>
+      <div class="author-credit">
+        Solução desenvolvida por
+        <strong>Carlos Henrique Rosa</strong>
+      </div>
+    </div>
   </div>
 
   <div class="tabs">
@@ -343,7 +393,10 @@ footer.note{
     </div>
   </div>
 
-  <footer class="note">Os achados são indicativos e não substituem a auditoria de faturamento de um profissional habilitado.</footer>
+  <footer class="note">
+    Os achados são indicativos e não substituem a auditoria de faturamento de um profissional habilitado.
+    <span class="footer-author">Pro Imagem &middot; Desenvolvido por Carlos Henrique Rosa</span>
+  </footer>
 </div>
 
 <!-- ============ MODAL: EDITAR/CRIAR REGRA ============ -->
