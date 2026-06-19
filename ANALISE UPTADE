@@ -1,8 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Triagem local de guias TISS em XML para identificação de possíveis glosas.">
 <title>Triagem TISS — Análise de Glosa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -483,7 +485,13 @@ function loadRules(){
   saveRules(d);
   return d;
 }
-function saveRules(rules){ localStorage.setItem(STORAGE_RULES, JSON.stringify(rules)); }
+function saveRules(rules){
+  try{
+    localStorage.setItem(STORAGE_RULES, JSON.stringify(rules));
+  }catch(e){
+    console.warn('Não foi possível salvar as regras no navegador.', e);
+  }
+}
 
 function loadTable(){
   try{
@@ -492,7 +500,13 @@ function loadTable(){
   }catch(e){}
   return null; // {items: [{codigo,descricao,valor}], fileName}
 }
-function saveTable(data){ localStorage.setItem(STORAGE_TABLE, JSON.stringify(data)); }
+function saveTable(data){
+  try{
+    localStorage.setItem(STORAGE_TABLE, JSON.stringify(data));
+  }catch(e){
+    console.warn('Não foi possível salvar a tabela no navegador.', e);
+  }
+}
 
 let RULES = loadRules();
 let REF_TABLE = loadTable();
@@ -515,29 +529,23 @@ document.querySelectorAll('.tab').forEach(btn=>{
    PARSER XML TISS — Guia SP/SADT
    Tenta ser tolerante a variações de namespace/nome de tag entre versões.
    ========================================================================= */
+function normalizedNames(tagNames){
+  return tagNames.map(tag=>tag.includes(':') ? tag.split(':').pop() : tag);
+}
+function matchingEls(node, tagNames){
+  if(!node) return [];
+  const names = new Set(normalizedNames(tagNames));
+  return Array.from(node.getElementsByTagName('*')).filter(el=>names.has(el.localName || el.nodeName.split(':').pop()));
+}
 function textOf(node, tagNames){
-  if(!node) return '';
-  for(const tag of tagNames){
-    const el = node.getElementsByTagName(tag)[0];
-    if(el && el.textContent.trim()!=='') return el.textContent.trim();
-  }
-  return '';
+  const el = matchingEls(node, tagNames).find(item=>item.textContent.trim()!=='');
+  return el ? el.textContent.trim() : '';
 }
 function firstEl(node, tagNames){
-  if(!node) return null;
-  for(const tag of tagNames){
-    const el = node.getElementsByTagName(tag)[0];
-    if(el) return el;
-  }
-  return null;
+  return matchingEls(node, tagNames)[0] || null;
 }
 function allEls(node, tagNames){
-  if(!node) return [];
-  for(const tag of tagNames){
-    const els = node.getElementsByTagName(tag);
-    if(els.length) return Array.from(els);
-  }
-  return [];
+  return matchingEls(node, tagNames);
 }
 function parseDateBR(str){
   // aceita DDMMAAAA ou AAAA-MM-DD
@@ -724,7 +732,7 @@ function runRule(rule, ctx){
     case 'valor_quantidade': {
       ctx.procedimentos.forEach(p=>{
         const qtdInvalida = p.quantidade!=null && p.quantidade<=0;
-        const valInvalido = p.valorUnitario!=null && p.valorUnitario<0;
+        const valInvalido = p.valorUnitario!=null && p.valorUnitario<=0;
         if(qtdInvalida || valInvalido){
           push(rule.message, `Procedimento ${p.codigo||'(s/código)'} — qtd: ${p.quantidade} / valor unitário: ${p.valorUnitario}`);
         }
